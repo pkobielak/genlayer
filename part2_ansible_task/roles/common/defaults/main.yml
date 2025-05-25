@@ -1,0 +1,7 @@
+---
+common_packages:
+  - git
+  - yq
+
+ppa_list:
+  - ppa:rmescandon/yq

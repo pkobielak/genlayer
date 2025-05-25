@@ -1,0 +1,9 @@
+---
+# Template the sample manifest for coordinator
+- name: Template manifest.yaml
+  template:
+    src: manifest.yaml.j2
+    dest: "{{ manifest_path }}"
+    owner: "{{ ci_user }}"
+    group: "{{ ci_user }}"
+    mode: '0644'

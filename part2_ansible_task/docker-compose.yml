@@ -1,0 +1,12 @@
+services:
+  ubuntu_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ansible_server
+    ports:
+      - "2222:22"
+    volumes:
+      - ~/.ssh/id_rsa.pub:/home/ansible/.ssh/authorized_keys:ro
+    tty: true
+    stdin_open: true

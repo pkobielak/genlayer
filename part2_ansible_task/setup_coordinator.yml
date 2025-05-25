@@ -1,0 +1,9 @@
+---
+- name: Setup multi-repo coordinator
+  hosts: coordinator
+  become: true
+  roles:
+    - common
+    - repo
+    - ci_user
+    - manifest

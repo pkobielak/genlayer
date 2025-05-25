@@ -1,0 +1,17 @@
+---
+repo_path: /opt/multi-repo-coordinator
+ci_user: ci-bot
+manifest_path: "{{ repo_path }}/manifest.yaml"
+repo_admin_email: "genlayer-admin@example.com"
+repo_admin_name: "genlayer-admin"
+
+# Extendable changeset configuration for manifest.yaml template 
+changeset_id: "CS-1001"
+changeset_status: "pending"
+changeset_repositories:
+  - name: "genlayer-js"
+    ref: "feature/new-config"
+  - name: "studio"
+    ref: "feature/ui-update"
+  - name: "cli"
+    ref: "feature/cli-update"

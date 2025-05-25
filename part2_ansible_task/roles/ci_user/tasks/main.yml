@@ -1,0 +1,39 @@
+---
+# Create CI user and SSH key for repository access
+- name: Ensure ci-bot user exists
+  user:
+    name: "{{ ci_user }}"
+    home: "/home/{{ ci_user }}"
+    shell: /bin/bash
+    create_home: yes
+
+- name: Ensure .ssh directory exists
+  file:
+    path: "/home/{{ ci_user }}/.ssh"
+    state: directory
+    owner: "{{ ci_user }}"
+    group: "{{ ci_user }}"
+    mode: '0700'
+
+- name: Generate SSH key pair for ci-bot
+  openssh_keypair:
+    path: "/home/{{ ci_user }}/.ssh/id_rsa"
+    owner: "{{ ci_user }}"
+    group: "{{ ci_user }}"
+    mode: '0600'
+    comment: "{{ ci_user }}@{{ ansible_fqdn }}"
+    type: rsa
+    size: 2048
+  register: ci_keypair
+
+- name: Add public key to authorized_keys
+  authorized_key:
+    user: "{{ ci_user }}"
+    state: present
+    key: "{{ ci_keypair.public_key }}"
+
+- name: Fetch public key to local machine for GitHub upload
+  fetch:
+    src: "/home/{{ ci_user }}/.ssh/id_rsa.pub"
+    dest: "./{{ ci_user }}_github_key.pub"
+    flat: yes

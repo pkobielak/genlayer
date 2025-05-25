@@ -1,0 +1,46 @@
+---
+# Initialize coordinator Git repository
+- name: Check if Git directory exists
+  stat:
+    path: "{{ repo_path }}/.git"
+  register: git_dir
+
+- name: Ensure repository directory exists
+  file:
+    path: "{{ repo_path }}"
+    state: directory
+  when: not git_dir.stat.exists
+
+- name: Initialize git repository
+  command: git init --initial-branch=main
+  args:
+    chdir: "{{ repo_path }}"
+    creates: "{{ repo_path }}/.git"
+  when: not git_dir.stat.exists
+
+- name: Check for existing commits
+  command: git rev-parse --verify HEAD
+  args:
+    chdir: "{{ repo_path }}"
+  register: rev_parse
+  failed_when: false
+  changed_when: false
+
+- name: Configure Git user email for repository
+  command: git config user.email "{{ repo_admin_email }}"
+  args:
+    chdir: "{{ repo_path }}"
+  when: rev_parse.rc != 0
+
+- name: Configure Git user name for repository
+  command: git config user.name "{{ repo_admin_name }}"
+  args:
+    chdir: "{{ repo_path }}"
+  when: rev_parse.rc != 0
+
+- name: Create empty initial commit
+  command: git commit --allow-empty -m "Initial commit"
+  args:
+    chdir: "{{ repo_path }}"
+  when: rev_parse.rc != 0
+

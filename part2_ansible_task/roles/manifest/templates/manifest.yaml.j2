@@ -1,0 +1,8 @@
+changesets:
+  - id: {{ changeset_id }}
+    repositories:
+{% for repo in changeset_repositories %}
+      - name: {{ repo.name }}
+        ref: {{ repo.ref }}
+{% endfor %}
+    status: {{ changeset_status }}

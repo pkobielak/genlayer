@@ -1,0 +1,24 @@
+---
+- name: Install software-properties-common
+  apt:
+    name: software-properties-common
+    state: present
+
+# Install common packages (git, yq)
+- name: Add PPA repositories
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  loop: "{{ ppa_list }}"
+  loop_control:
+    label: "{{ item }}"
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install common packages
+  apt:
+    name: "{{ common_packages }}"
+    state: present
